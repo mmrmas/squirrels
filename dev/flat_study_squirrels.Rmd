@@ -1,0 +1,79 @@
+---
+title: "flat_minimal.Rmd empty"
+output: html_document
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r development, include=FALSE}
+library(testthat)
+```
+
+<!--
+ You need to run the 'description' chunk in the '0-dev_history.Rmd' file before continuing your code there.
+-->
+
+```{r development-load}
+# Load already included functions if relevant
+pkgload::load_all(export_all = FALSE)
+```
+
+# Get a message with a fur color
+    
+You can get a message with the fur color of interest with `get_message_fur_color()`.
+
+```{r function-get_message_fur_color}
+#' Get a message with the fur color of interest
+#'
+#' @param primary_fur_color Character. The primary fur color of interest
+#' @importFrom glue glue
+#' 
+#' @return Used for side effect. Outputs a message in the console
+#' @export
+#'
+#' @examples
+get_message_fur_color <- function(primary_fur_color) {
+  message(glue("We will focus on {primary_fur_color} squirrels"))
+}
+```
+  
+```{r example-get_message_fur_color}
+get_message_fur_color(primary_fur_color = "Cinnamon")
+```
+  
+```{r tests-get_message_fur_color}
+test_that("get_message_fur_color works", {
+  
+  expect_message(
+    object = get_message_fur_color(primary_fur_color = "Cinnamon"), 
+    regexp = "We will focus on Cinnamon squirrels"
+  )
+  
+  expect_message(
+    object = get_message_fur_color(primary_fur_color = "Gray"), 
+    regexp = "We will focus on Gray squirrels"
+  )
+  
+  expect_message(
+    object = get_message_fur_color(primary_fur_color = "Black"), 
+    regexp = "We will focus on Black squirrels"
+  )
+  
+})
+
+test_that("get_message_fur_color doesnt works", {
+  
+  expect_error(
+   get_message_fur_color()
+  )
+  
+})
+```
+  
+
+```{r development-inflate, eval=FALSE}
+# Run but keep eval=FALSE to avoid infinite loop
+# Execute in the console directly
+fusen::inflate(flat_file = "dev/flat_study_squirrels.Rmd", 
+               vignette_name = "Study the squirrels")
+```

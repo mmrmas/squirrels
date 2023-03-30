@@ -1,0 +1,26 @@
+Package: squirrels
+Title: Squeezing Squirrel Data
+Version: 0.0.0.9000
+Authors@R: 
+    person("Sam", "Linsen", , "sam.linsen@finddx.org", role = c("aut", "cre"),
+           comment = c(ORCID = "0000-0002-1391-5715"))
+Description: A package with functions to report on the squirrel dataset in
+    R.
+License: MIT + file LICENSE
+Depends: 
+    R (>= 2.10)
+Imports: 
+    glue
+Suggests: 
+    dplyr,
+    knitr,
+    readr,
+    rmarkdown,
+    stringr,
+    testthat
+VignetteBuilder: 
+    knitr
+Encoding: UTF-8
+LazyData: true
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.2.0
