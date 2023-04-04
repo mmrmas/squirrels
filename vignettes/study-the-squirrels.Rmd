@@ -42,3 +42,16 @@ get_message_fur_color(primary_fur_color = "Cinnamon")
   
 
 
+  
+
+```{r example-study_activity}
+data("nyc_squirrels_act_sample_15")
+study_activity(df_squirrels_act = nyc_squirrels_act_sample_15, 
+                                     col_primary_fur_color = "Gray")
+```
+
+  
+
+  
+
+

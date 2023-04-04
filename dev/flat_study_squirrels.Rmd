@@ -7,6 +7,10 @@ editor_options:
 
 ```{r development, include=FALSE}
 library(testthat)
+library(dplyr)
+library(ggplot2)
+library(magrittr)
+library(glue)
 ```
 
 <!--
@@ -71,9 +75,81 @@ test_that("get_message_fur_color doesnt works", {
 ```
   
 
+```{r function-study_activity} 
+
+#'Study the activities of the squirrels given a primary fur color
+#'
+#' @param df_squirrels_act Data frame. A dataset with the activities of the squirrels. This dataset mush have at leat these 4 columns: "age", "primary_fur_color", "activity", "counts".
+#' @param col_primary_fur_color Character. The color of the primary fur color of interest. Only the squirrels with this primary fur color will be considered in the analysis.
+#' 
+#' @importFrom dplyr filter
+#' @importFrom ggplot2 ggplot aes geom_col scale_fill_manual labs
+#' @importFrom magrittr %>% 
+#' @importFrom glue glue
+#'
+#' @return A list of two named elements. The first one is the filtered table. The second one is the ggplot.
+#' @export
+#'
+#' @examples
+study_activity <- function(df_squirrels_act, col_primary_fur_color) {
+  
+  # check if we have the right column
+  check_squirrel_data_integrity(df_squirrels_act)
+  
+  # check if we provide the right color
+  check_primary_color_is_ok(col_primary_fur_color)
+  
+  if(isFALSE(is.data.frame(df_squirrels_act))) {
+    stop("df_squirrels_act is not a data frame")
+  }
+  
+  if(isFALSE(is.character(col_primary_fur_color))) {
+    stop("col_primary_fur_color is not a character vector")
+  }
+  
+  table <- df_squirrels_act %>% 
+    filter(primary_fur_color == col_primary_fur_color)
+    
+  graph <- table %>% 
+    ggplot() +
+    aes(x = activity, y = counts, fill = age) +
+    geom_col() +
+    labs(x = "Type of activity",
+         y = "Number of observations",
+         title = glue("Type of activity by age for {tolower(col_primary_fur_color)} squirrels")) +
+    scale_fill_manual(name = "Age",
+                      values = c("#00688B", "#00BFFF"))
+  
+  return(list(table = table, graph = graph))
+}
+
+```
+  
+```{r example-study_activity}
+data("nyc_squirrels_act_sample_15")
+study_activity(df_squirrels_act = nyc_squirrels_act_sample_15, 
+                                     col_primary_fur_color = "Gray")
+```
+  
+```{r tests-study_activity}
+test_that("study_activity() works", {
+    expect_message(study_activity(df_squirrels_act = nyc_squirrels_act_sample_15, 
+                                     col_primary_fur_color = "Gray"),
+                 regexp = "All primary fur colors are ok") 
+     # expect_error(study_activity(df_squirrels_act = nyc_squirrels_act_sample_15, 
+     #                                  col_primary_fur_color = ""),
+     #              regexp = "All primary fur colors are ok")
+  
+  
+  
+})
+```
+  
+
 ```{r development-inflate, eval=FALSE}
 # Run but keep eval=FALSE to avoid infinite loop
 # Execute in the console directly
 fusen::inflate(flat_file = "dev/flat_study_squirrels.Rmd", 
-               vignette_name = "Study the squirrels")
+               vignette_name = "Study the squirrels",
+               overwrite = TRUE)
 ```

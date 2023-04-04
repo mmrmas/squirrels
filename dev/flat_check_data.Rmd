@@ -46,6 +46,7 @@ check_primary_color_is_ok <- function(string) {
 ```{r example-check_primary_color_is_ok}
 check_primary_color_is_ok(string = c("Black", "Cinnamon", NA))
 check_primary_color_is_ok(string = c("Gray", "Cinnamon", "Gray"))
+check_primary_color_is_ok(string = c("Gray", "Cinnamon", "NoColor"))
 ```
   
 ```{r tests-check_primary_color_is_ok}
@@ -87,7 +88,6 @@ check_squirrel_data_integrity <- function(df_squirrels){
   if (isTRUE(primary_colors_ok)){
     message("All primary fur colors are ok")
   }
-   
 }
 ```
   

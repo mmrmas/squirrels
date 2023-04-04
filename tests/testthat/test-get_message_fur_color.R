@@ -26,3 +26,15 @@ test_that("get_message_fur_color doesnt works", {
   )
   
 })
+
+test_that("study_activity() works", {
+    expect_message(study_activity(df_squirrels_act = nyc_squirrels_act_sample_15, 
+                                     col_primary_fur_color = "Gray"),
+                 regexp = "All primary fur colors are ok") 
+     # expect_error(study_activity(df_squirrels_act = nyc_squirrels_act_sample_15, 
+     #                                  col_primary_fur_color = ""),
+     #              regexp = "All primary fur colors are ok")
+  
+  
+  
+})
