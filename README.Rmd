@@ -39,3 +39,6 @@ get_message_fur_color()
 
 check_primary_color_is_ok("Black")
 ```
+## Background information
+
+This package was created as part of an N2 training.
