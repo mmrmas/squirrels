@@ -11,6 +11,7 @@ library(dplyr)
 library(ggplot2)
 library(magrittr)
 library(glue)
+library(utils)
 ```
 
 <!--
@@ -108,8 +109,13 @@ study_activity <- function(df_squirrels_act, col_primary_fur_color) {
   }
   
   table <- df_squirrels_act %>% 
-    filter(primary_fur_color == col_primary_fur_color)
-    
+    filter(primary_fur_color == col_primary_fur_color) 
+  
+  print(dput(table))
+  
+  csv_file <- save_as_csv(this_data_frame = table,  
+                csv_destination = "study_activity.csv")
+
   graph <- table %>% 
     ggplot() +
     aes(x = activity, y = counts, fill = age) +
@@ -120,7 +126,7 @@ study_activity <- function(df_squirrels_act, col_primary_fur_color) {
     scale_fill_manual(name = "Age",
                       values = c("#00688B", "#00BFFF"))
   
-  return(list(table = table, graph = graph))
+  return(list(table = table, graph = graph, csv_file = csv_file))
 }
 
 ```
@@ -144,6 +150,74 @@ test_that("study_activity() works", {
   
 })
 ```
+  
+  
+
+```{r function-save_as_csv}
+#' Save a dataset as a csv file 
+#' 
+#' @param nyc_squirrels_act_sample_15 a dataframe to write to csv
+#' @param csv_name a string that corresponds to the path of the file to be created
+#' 
+#' @return a string: the full path of the created csv as output
+#' with the function write.csv2() from {utils} package to the specified path
+#' 
+#' @importFrom utils write.csv
+#' 
+#' @export
+save_as_csv<- function(this_data_frame = nyc_squirrels_act_sample_15, csv_destination  = "temp.csv"){
+  
+  # check for "csv", class and existing dir
+  expect_true(grepl("csv$",csv_destination))
+  expect_true(inherits(this_data_frame, "data.frame"))
+  expect_true(dir.exists(dirname(csv_destination)))
+  
+  # set the pathname
+  csv_path = normalizePath(csv_destination)
+  
+  # write the file
+  utils::write.csv2(this_data_frame, csv_path)  
+  
+  # return it
+  return(csv_path)
+}
+
+```
+  
+```{r example-save_as_csv}
+my_temp_folder <- tempfile(pattern = "savecsv")
+dir.create(my_temp_folder)
+
+# ok: the .csv file is saved in the current project
+nyc_squirrels_act_sample_15 %>% save_as_csv(file.path(my_temp_folder, "output.csv"))
+
+# ok: the .csv file is saved and the file opens
+nyc_squirrels_act_sample_15 %>% save_as_csv(file.path(my_temp_folder, "output.csv")) %>% browseURL() 
+
+# error: the extension of the file to create is not the right one
+# iris %>% save_as_csv(file.path(my_temp_folder, "output.xlsx")) 
+
+# error: the function is not applied to a data.frame
+# NULL %>% save_as_csv(file.path(my_temp_folder, "output.csv"))
+
+# error: the path where the file should be saved does not exist
+# iris %>% save_as_csv(file.path(my_temp_folder, "does/no/exist.csv")) 
+
+# need to unlink
+# ...
+
+```
+  
+```{r tests-save_as_csv()}
+test_that("save_as_csv() works", {
+  expect_true(inherits(save_as_csv(), "function")) 
+  
+  # .. and unlink
+})
+```
+
+
+
   
 
 ```{r development-inflate, eval=FALSE}
